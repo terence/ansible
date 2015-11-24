@@ -15,9 +15,10 @@ echo Which key do you want to use?
 echo -------------------------------------------------------------
 echo 01 : Run Ansible - Basic
 echo 02 : Run Ansible - With -i referenced inventory
-echo 03 : Run Ansible - Basic Add User Playbook
-echo 04 : Run Ansible - Install Nginx Playbook
-echo 05 : Run Ansible - Install Nginx Playbook - Dry Run
+echo 03 : Run Ansible - Basic Add User Playbook - Groups
+echo 04 : Run Ansible - Basic Add User Playbook - Users
+echo 05 : Run Ansible - Install Nginx Playbook
+echo 06 : Run Ansible - Install Nginx Playbook - Dry Run
 echo ----------------------------------------------
 echo 88 : Deploy .bash_profile, .vimrc and other bash settings
 echo 90 : Zip up the keys
@@ -56,24 +57,30 @@ case "$SELECTION" in
   # Note double semicolon to terminate each option.
   "02" )
   echo Run ansible with referenced inventory
-  $APP_ANSIBLE -u root -i ~/.ssh/ansible/hosts $CLUSTER -m setup
+  $APP_ANSIBLE -u root -i ~/.ssh/ansible/inventory/hosts $CLUSTER -m setup
   ;;
 
 
   "03" )
-  echo Run ansible with basic adduser playbook
-  $APP_ANSIBLE_PLAYBOOK -i ~/.ssh/ansible/hosts -l $CLUSTER playbooks/adduser.yml --user root  
+  echo Run ansible with basic adduser playbook - groups
+  $APP_ANSIBLE_PLAYBOOK -i ~/.ssh/ansible/inventory/hosts -l $CLUSTER playbooks/add_user.yml --user root --tags "groups"
   ;;
 
 
   "04" )
-  echo Run ansible with install Nginx playbook
-  $APP_ANSIBLE_PLAYBOOK -i ~/.ssh/ansible/hosts -l $CLUSTER playbooks/install_ansible_glitchdata_com.yml --user root  
+  echo Run ansible with basic adduser  playbook - add users
+  $APP_ANSIBLE_PLAYBOOK -i ~/.ssh/ansible/inventory/hosts -l $CLUSTER playbooks/add_user.yml --user root --tags "users,groups" 
   ;;
+
 
   "05" )
   echo Run ansible with install Nginx playbook
-  $APP_ANSIBLE_PLAYBOOK -i ~/.ssh/ansible/hosts -l $CLUSTER playbooks/install_nginx.yml --user root --check --diff
+  $APP_ANSIBLE_PLAYBOOK -i ~/.ssh/ansible/inventory/hosts -l $CLUSTER playbooks/install_ansible_glitchdata_com.yml --user root  
+  ;;
+
+  "06" )
+  echo Run ansible with install Nginx playbook
+  $APP_ANSIBLE_PLAYBOOK -i ~/.ssh/ansible/inventory/hosts -l $CLUSTER playbooks/install_nginx.yml --user root --check --diff
   ;;
   
 
