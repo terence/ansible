@@ -8,9 +8,9 @@ Ansible is a radically simple IT automation engine that automates cloud provisio
 - [Ansible History](#ansible-history) 
   - Ansible Features
   - [Ansible Usage](#ansible-usage)
-  - [[External References]
+  - [External References]
 
-## Ansible Usage
+### Ansible Usage
 - Playbooks
 - Dict
 - Variables
