@@ -14,7 +14,7 @@ Ansible is a radically simple IT automation engine that automates cloud provisio
 - Playbooks
 - Dict
 - Variables
-- [More Usage...](ANSIBLEUSAGE.md)
+- [More Usage...](docs/ANSIBLEUSAGE.md)
 
 
 ## Ansible History
