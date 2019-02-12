@@ -3,7 +3,7 @@
 # Ansible Usage
 
 - Some pointers...
--- Blah blah
+ - Blah blah
 - More pointers
 
 
