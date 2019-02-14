@@ -1,0 +1,10 @@
+---
+# Common Variables
+
+default_backup_dir: /remote_directory/
+local_backup_dir: local/directory
+
+your_name: 'GD Admin'
+your_email: 'admin@glitchdata.com'
+
+

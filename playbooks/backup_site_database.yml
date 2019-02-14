@@ -1,0 +1,71 @@
+---
+# Simple MySQL Playbook
+# MySQL by root, and then have its rights adjusted.
+- hosts: dh
+  user: glitchdata
+  sudo: false
+  gather_facts: yes
+  vars_files:
+    - vars.yml
+
+  vars:
+    db_user: 'adfafa'
+    db_pass: ']YQnjvusdasfruKB3VMA4txUJe.B'
+    db_host: 'database.glitchdata.com'
+    databases:
+      - glitchdata_db2
+    remote_backup_directory: ~/glitchdata.com/backup/
+    local_backup_directory: ~/Downloads/
+
+
+  tasks:
+    - name: Method#1 MySQL Backup using Command Module and mysqldump
+      command: mysqldump --opt -u{{ db_user }} -p{{ db_pass }} -h{{ db_host }} --add-drop-table --add-drop-database --databases glitchdata_db2 --result-file=glitchdata.com/backup/{{ansible_date_time.year}}{{ansible_date_time.month}}{{ansible_date_time.day}}_{{db_host}}_mysql_backup_DB_glitchdata_db2.sql
+      tags:
+        - databases
+
+
+#    - name: Method#2 MySQL Backup using MySQL Module
+#      mysql_db: login_user={{db_user}} login_host={{db_host}} login_password={{db_pass}} name={{item}} state=dump target={{remote_backup_directory}}{{ansible_date_time.iso8601}}-ansible_dbdump.sql
+#      with_items: databases
+#      tags:
+#        - databases
+#
+#
+#    - name: Tarball Site DB
+#      command: tar -cvzf {{remote_backup_directory}}{{ansible_date_time.year}}{{ansible_date_time.month}}{{ansible_date_time.day}}_{{db_host}}_mysql_backup_DB_glitchdata_db2.tgz {{remote_backup_directory}}{{ansible_date_time.year}}{{ansible_date_time.month}}{{ansible_date_time.day}}_{{db_host}}_mysql_backup_DB_glitchdata_db2.sql
+#      tags:
+#        - databases
+#
+
+#    - name: Deleted SQL file
+#      file: path={{remote_backup_directory}}{{ansible_date_time.year}}{{ansible_date_time.month}}{{ansible_date_time.day}}_{{db_host}}_mysql_backup_DB_glitchdata_db2.sql state=absent
+#      tags:
+#        - databases
+#
+#
+#    - name: Tarball Sites Files & Folders
+#      command: tar -czvf {{remote_backup_directory}}{{ansible_date_time.year}}{{ansible_date_time.month}}{{ansible_date_time.day}}_glitchdata.com_FILES_on_glitchdata.com.tgz ~/glitchdata.com/public/
+#      tags:
+#        - files
+#
+#
+#    - name: Copy Backups from Remote to Local 
+#      fetch: src={{remote_backup_directory}}{{item}}.tgz dest={{local_backup_directory}}
+#      with_items: {{ansible_date_time.year}}{{ansible_date_time.month}}{{ansible_date_time.day}}_{{db_host}}_mysql_backup_DB_glitchdata_db2
+#      tags:
+#        - databases
+#        - files
+#
+
+#    - name: Send Email notification
+#      mail:
+#        subject='Ansible Backup Report'
+#        body='These databases have been backed up xxxx'
+#        from='admin@glitchdata.com'
+#        to='Terence Chia <admin@glitchdata.com>'
+#        host='glitchdata.com'
+#        username='admin@glitchdata.com'
+#        password='rRLAMqSW'
+#      ignore_errors: true
+

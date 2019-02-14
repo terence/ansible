@@ -1,0 +1,26 @@
+--- 
+## This is /mysql/tasks/setup.yml. 
+## This setup.yml conforms to playbook guidelines.
+ 
+
+- name: update apt repo
+  action: apt update-cache=yes
+
+- name: install mariadb-server
+  action: apt name=mariadb-server state=installed
+
+#- name:  copy fixed init for nginx
+#  action: copy src=nginx/files/nginx.init dest=/etc/init.d/nginx mode=0755  backup=yes
+
+- name: service mysql
+  action: service name=mysql state=started 
+
+- name: write my.cnf 
+  action: template src='mysql/templates/my.cnf.j2' dest='/etc/mysql/conf.d/mysqld-ansible.cnf' backup=yes
+  notify:
+    - restart mysql
+
+
+#- name: Change ownership of MySQL installation
+#  file: path=/usr/share/mysql/ owner=mysql group=mysql state=directory recurse=yes
+

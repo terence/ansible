@@ -1,0 +1,20 @@
+---
+# Simple MariaDB Playbook
+# MariaDB by root, and then have its rights adjusted.
+- hosts: do
+  user: root
+  sudo: false
+  gather_facts: no
+
+  vars:
+    # workers: use at template ansible_processor_count
+    connections: "1024"
+    is_10_up: "'$ansible_distribution_version' >= '10.04'"
+    is_ubuntu: "'$ansible_distribution' == 'Ubuntu'"
+
+  tasks:
+    - include: mariadb/tasks/setup.yml
+
+  handlers:
+    - name: restart mariadb
+      action: service name=mariadb state=restarted

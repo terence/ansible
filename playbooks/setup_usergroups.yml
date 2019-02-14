@@ -1,0 +1,95 @@
+
+---
+- hosts: all
+  user: root
+  sudo: true
+  gather_facts: no
+
+  vars:
+#    root_password: 'HASHED_PASSWORD'
+#    remote_password: '$1$some_pla$Aazm7DMwj0r9eOm/Rl8V10'
+
+  vars_prompt:
+#    - name: "some_password"
+#      prompt: "Enter password"
+#      private: yes
+#      confirm: yes
+#      default: "saL4NGKU45FFg"
+    - name: "nginx_password"
+      prompt: "Enter Nginx password"
+      private: yes
+      encrypt: "sha512_crypt"
+      confirm: yes
+      default: "saL4NGKU45FFg"
+      salt_size: 7
+
+  tasks:
+  - name: Add group nginx
+    group: name=nginx state=present
+ 
+  - name: Add basic user nginx
+    user: name=nginx group=nginx password={{ nginx_password }} shell=/bin/bash groups=nginx
+
+  - name: Add SSH public key to user nginx
+    authorized_key:
+      user=nginx
+      key="{{ lookup('file', "~/.ssh/id_dsa.pub") }}"
+
+  - name: Add user tchia
+    user: name=tchia password={{ nginx_password }} shell=/bin/bash groups=users append=yes
+
+  - name: Add SSH public key to user tchia
+    authorized_key:
+      user=tchia
+      key="{{ lookup('file', "!/.ssh/ida_dsa.pub") }}"
+
+  - name: Add user tchia to sudoers
+    lineinfile: "dest=/etc/sudoers regexp='^tchia ALL' line='tchia ALL=(ALL) NOPASSWD: ALL' state=present"
+
+  - name: Add user tzeming
+    user: name=tzeming password={{ nginx_password }} shell=/bin/bash groups=users append=yes
+
+  - name: Add user harro
+    user: name=harro password={{ nginx_password }} shell=/bin/bash groups=users
+
+  - name: Add hr_wiki
+    user: name=hr_wiki password={{ nginx_password }} shell=/bin/bash groups=users
+ 
+#  - name: Disallow root SSH access
+#    lineinfile:
+#      dest=/etc/ssh/sshd_config
+#      regexp="^PermitRootLogin"
+#      line="PermitRootLogin no"
+#      state=present
+#    notify:
+#      - restart sshd
+ 
+#  - name: Disallow SSH password authentication
+#    lineinfile:
+#      dest=/etc/ssh/sshd_config
+#      regexp="^PasswordAuthentication"
+#      line="PasswordAuthentication no"
+#      state=present
+#    notify:
+#      - restart sshd
+ 
+#  - name: Disallow SSH GSS API authentication
+#    lineinfile:
+#      dest=/etc/ssh/sshd_config
+#      regexp="^GSSAPIAuthentication"
+#      line="GSSAPIAuthentication no"
+#      state=present
+#    notify:
+#      - restart sshd
+
+#  - name: Remove user remote
+#    user: name=remote state=absent remove=yes
+
+
+  handlers:
+  - name: restart sshd
+    service: 
+      name=sshd
+      state=restarted
+
+

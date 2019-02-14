@@ -1,0 +1,33 @@
+
+---
+- hosts: all
+  vars:
+#    - root_password: 'HASHED_PASSWORD'
+    - remote_password: '$1$some_pla$Aazm7DMwj0r9eOm/Rl8V10'
+ 
+  tasks:
+  - name: Add group nginx
+    group: name=nginx state=present
+ 
+
+  - name: Add basic user datavoid
+    user: name=datavoid group=nginx password={{ remote_password }}
+
+  - name: Add user glitchdata
+    user: name=glitchdata password={{ remote_password }}
+
+  - name: Add user gd_wiki
+    user: name=gd_wiki password={{ remote_password }}
+
+  - name: Add user harro
+    user: name=harro password={{ remote_password }}
+
+  - name: Add hr_wiki
+    user: name=harro password={{ remote_password }}
+
+  - name: Add user tzeming
+    user: name=tzeming password={{ remote_password }}
+
+#  - name: Remove user remote
+#    user: name=remote state=absent remove=yes
+

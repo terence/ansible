@@ -6,6 +6,5 @@
 HOSTS="
 glitchdata.com
 glitchtraders.com
-harro.com 
 "
 
